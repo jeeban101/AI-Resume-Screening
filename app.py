@@ -1,9 +1,12 @@
+import nltk
+nltk.download('stopwords')
+
+
 from flask import Flask, render_template, request
 from werkzeug.utils import secure_filename
 from Resume_parser import extract_skills, compare_skills, send_email, extract_education, extract_certificates
 
 app = Flask(__name__)
-
 
 @app.route('/')
 def homepage():
