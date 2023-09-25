@@ -2,17 +2,24 @@ from pyresparser import ResumeParser
 import smtplib
 
 # SMTP initialization for Outlook
-s = smtplib.SMTP('smtp.office365.com', 587)
-s.starttls()
-s.login("jobcell2023@outlook.com", "Masu6bhat@")
+def connect_to_smtp_server():
+    try:
+        s = smtplib.SMTP('smtp.office365.com', 587)
+        s.starttls()
+        s.login("jobcell2023@outlook.com", "Masu6bhat@")
+        return s
+    except smtplib.SMTPException as e:
+        # Handle connection/authentication errors here
+        print("SMTP Connection Error:", str(e))
+        return None
 
 SUBJECT = "Interview Call"
 python_skills = ["ml", "ai", "matplotlib", "seaborn",
                  "python", "regression", "algorithms",
                  "pandas", "data analysis", "keras",
                  "tensorflow", "artificial intelligence",
-                 "data visualization", "opencv"]
-java_skills = ["java", "object-oriented programming",
+                 "data visualization", "opencv","SQL","API","AWS","SQL/NoSQL"]
+java_skills = ["java","api","sql","SQL/NoSQL","API","object-oriented programming",
                "data structures", "algorithms",
                "spring framework", "hibernate",
                "SQL", "multithreading", "JavaFX",
@@ -71,7 +78,7 @@ def compare_skills(appliedJob, skills):
     return skills_matched
 
 
-def send_email(email, name, is_rejected, appliedJob):
+def send_email(email, name, is_rejected, appliedJob,s):
     if is_rejected:
         TEXT = f"Hello {name}, \n\nThanks for applying to the job post {appliedJob} . Your candidature is " \
                f"rejected.\n\n\n\nThanks and Regards,\n\nTalent Acquisition Team,\n\nSmartInternz by Smartbridge"

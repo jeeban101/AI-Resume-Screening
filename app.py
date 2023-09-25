@@ -4,7 +4,7 @@ nltk.download('stopwords')
 
 from flask import Flask, render_template, request
 from werkzeug.utils import secure_filename
-from Resume_parser import extract_skills, compare_skills, send_email, extract_education, extract_certificates
+from Resume_parser import extract_skills, compare_skills, send_email, connect_to_smtp_server, extract_education, extract_certificates
 
 app = Flask(__name__)
 
@@ -45,17 +45,20 @@ def upload_file():
         print(email)
         print(skills)
         print(skills_matched)
+        numberOf_skills_matched=len(skills_matched)
         is_rejected = True
-        if len(skills_matched) >= 4:
+        if len(skills_matched) >= 2:
             print("he is eligible")
             is_rejected = False
-            send_email(email, name, is_rejected, appliedJob)
-            return render_template('success.html', name=nameGiven, email=emailGiven, skills=skills_matched)
+            s=connect_to_smtp_server()
+            send_email(email, name, is_rejected, appliedJob,s)
+            return render_template('success.html', name=nameGiven, email=emailGiven, skills=skills_matched,count=numberOf_skills_matched)
         else:
             is_rejected = True
             print("Sorry, we can't process your candidature")
-            send_email(email, name, is_rejected, appliedJob)
-            return render_template('success.html', name=nameGiven, email=emailGiven, skills=skills_matched)
+            s=connect_to_smtp_server()
+            send_email(email, name, is_rejected, appliedJob,s)
+            return render_template('success.html', name=nameGiven, email=emailGiven, skills=skills_matched,count=numberOf_skills_matched)
     else:
         return render_template('home.html')
 
